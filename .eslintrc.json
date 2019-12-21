@@ -1,0 +1,51 @@
+{
+  "root": true,
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true
+    },
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint", "react", "react-hooks"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "prettier",
+    "prettier/@typescript-eslint"
+  ],
+  "settings": { "react": { "version": "detect" } },
+  "reportUnusedDisableDirectives": true,
+  "rules": {
+    "curly": ["warn", "multi-line", "consistent"],
+    "prefer-const": "warn",
+    "no-console": "off",
+    "no-dupe-class-members": "error",
+    "no-empty": "warn",
+    "no-shadow": "warn",
+    "no-undef": "off",
+    "no-unused-expressions": "error",
+    "no-unused-vars": "off",
+    "no-var": "warn",
+    "default-case": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "vars": "all",
+        "args": "all",
+        "ignoreRestSiblings": true,
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "react/prop-types": "off",
+    "react/no-unescaped-entities": "warn",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "esModuleInterop": true,
+    "target": "es5",
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "allowJs": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "src",
+    "paths": {
+      "~/*": ["*"]
+    }
+  },
+  "include": ["src", "stories", "test", "next-env.d.ts", "next.config.js"],
+  "exclude": ["node_modules"]
+}

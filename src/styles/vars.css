@@ -1,0 +1,7 @@
+@custom-media --desktop (min-width: 768px);
+
+:root {
+  --font-main: "Roboto", sans-serif;
+  --text: #efe;
+  --background: #58002c;
+}

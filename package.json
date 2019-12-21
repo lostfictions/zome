@@ -1,0 +1,92 @@
+{
+  "name": "zome",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "next start",
+    "dev": "next dev",
+    "build": "next build",
+    "jest": "jest --watch",
+    "sb": "start-storybook -p 6006 --ci",
+    "prettier": "prettier --write '{src,test}/**/*.{css,scss,js,ts,tsx}'",
+    "test": "run-s -l test:*",
+    "test:eslint": "eslint '{src,test}/**/*.{js,ts,tsx}' --ext .ts,.tsx",
+    "test:prettier": "prettier '{src,test}/**/*.{css,scss,js,ts,tsx}' -l",
+    "test:ts": "tsc --noEmit",
+    "test:stylelint": "stylelint 'src/**/*.{css,scss}'",
+    "test:jest": "jest --colors --env=jsdom"
+  },
+  "dependencies": {
+    "@types/classnames": "^2.2.9",
+    "@types/node": "^12.12.21",
+    "@types/react": "^16.9.16",
+    "@types/react-dom": "^16.9.4",
+    "classnames": "^2.2.6",
+    "next": "^9.1.5",
+    "next-compose-plugins": "^2.2.0",
+    "next-fonts": "^0.19.0",
+    "next-optimized-images": "^2.5.4",
+    "react": "16.12.0",
+    "react-dom": "16.12.0",
+    "typescript": "^3.7.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@storybook/addon-info": "^5.2.8",
+    "@storybook/addons": "^5.2.8",
+    "@storybook/react": "^5.2.8",
+    "@types/jest": "^24.0.24",
+    "@typescript-eslint/eslint-plugin": "2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-react": "^7.17.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^24.9.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.19.1",
+    "react-docgen-typescript-loader": "^3.6.0",
+    "react-test-renderer": "^16.12.0",
+    "stylelint": "^12.0.0",
+    "stylelint-config-css-modules": "^1.5.0",
+    "stylelint-config-prettier": "^7.0.0",
+    "stylelint-config-standard": "^19.0.0",
+    "stylelint-css-modules": "reflector-six/stylelint-css-modules#7bc1101",
+    "stylelint-media-use-custom-media": "^1.0.0",
+    "stylelint-value-no-exposed-custom-properties": "^2.2.0",
+    "stylelint-value-no-unknown-custom-properties": "^2.0.0"
+  },
+  "babel": {
+    "presets": [
+      "next/babel"
+    ]
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/test/**/*.[jt]s?(x)"
+    ],
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/fileMock.js",
+      "\\.module.css$": "identity-obj-proxy",
+      "\\.css$": "<rootDir>/fileMock.js"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=12"
+  }
+}
