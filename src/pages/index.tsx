@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import styled, { css } from "astroturf";
 
-import { withApollo } from "~/apollo/client";
+import { withApollo } from "~/apollo/with-apollo";
 import PostList from "~/components/PostList";
 
 const { button } = css`

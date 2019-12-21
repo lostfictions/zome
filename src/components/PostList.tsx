@@ -1,9 +1,10 @@
 import React from "react";
 import gql from "graphql-tag";
-import { useQuery } from "@apollo/client";
 
-const FeedQuery = gql`
-  query FeedQuery {
+import { useFeedQuery } from "~/apollo/generated/client";
+
+gql`
+  query Feed {
     feed {
       title
       content
@@ -12,10 +13,10 @@ const FeedQuery = gql`
 `;
 
 const PostList = () => {
-  const { data, loading, error } = useQuery(FeedQuery);
+  const { data, loading, error } = useFeedQuery();
 
   if (loading) return <div>loading...</div>;
-  if (error) {
+  if (!data || error) {
     return (
       <div>
         error! <pre>{JSON.stringify(error)}</pre>
@@ -25,7 +26,7 @@ const PostList = () => {
 
   return (
     <div>
-      {(data.feed as any[]).map((p, i) => (
+      {data.feed.map((p, i) => (
         <div key={i}>
           <h1>{p.title}</h1>
           <p>{p.content}</p>

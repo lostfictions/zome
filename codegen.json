@@ -1,0 +1,21 @@
+{
+  "overwrite": true,
+  "schema": "src/gql/generated/schema.graphql",
+  "documents": "src/{components,pages}/**/*.tsx",
+  "generates": {
+    "src/apollo/generated/client.tsx": {
+      "plugins": [
+        "typescript",
+        "typescript-operations",
+        "typescript-react-apollo"
+      ],
+      "config": {
+        "withHooks": true,
+        "reactApolloVersion": 3,
+        "withComponent": false,
+        "withHOC": false,
+        "addDocBlocks": false
+      }
+    }
+  }
+}

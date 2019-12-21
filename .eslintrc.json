@@ -30,7 +30,7 @@
     "no-empty": "warn",
     "no-shadow": "warn",
     "no-undef": "off",
-    "no-unused-expressions": "error",
+    "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "no-unused-vars": "off",
     "no-var": "warn",
     "default-case": "warn",
