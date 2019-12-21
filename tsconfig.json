@@ -14,9 +14,9 @@
     "allowJs": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "src",
+    "baseUrl": ".",
     "paths": {
-      "~/*": ["*"]
+      "~/*": ["src/*"]
     }
   },
   "include": ["src", "stories", "test", "next-env.d.ts", "next.config.js"],

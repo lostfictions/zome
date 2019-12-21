@@ -6,6 +6,9 @@
 # next.js
 /.next/
 
+# prisma
+/prisma/dev.db
+
 # misc
 .DS_Store
 .env
