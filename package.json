@@ -13,7 +13,7 @@
     "test:eslint": "eslint '{src,test}/**/*.{js,ts,tsx}' --ext .ts,.tsx",
     "test:prettier": "prettier '{src,test}/**/*.{css,scss,js,ts,tsx}' -l",
     "test:ts": "tsc --noEmit",
-    "test:stylelint": "stylelint 'src/**/*.{css,scss}'",
+    "test:stylelint": "stylelint 'src/**/*.{tsx,css,scss}'",
     "test:jest": "jest --colors --env=jsdom"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
     "@types/node": "^12.12.21",
     "@types/react": "^16.9.16",
     "@types/react-dom": "^16.9.4",
+    "astroturf": "^0.10.2",
     "classnames": "^2.2.6",
     "next": "^9.1.5",
     "next-compose-plugins": "^2.2.0",

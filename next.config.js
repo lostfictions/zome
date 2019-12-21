@@ -11,6 +11,18 @@ module.exports = withPlugins(
       webpack(cfg) {
         // allow root-relative paths with the "~" prefix
         cfg.resolve.alias["~"] = path.join(__dirname, "src");
+
+        // enable astroturf
+        cfg.module.rules.push({
+          test: /\.tsx$/,
+          use: [
+            {
+              loader: "astroturf/loader",
+              options: { extension: ".module.css" }
+            }
+          ]
+        });
+
         return cfg;
       }
     }),

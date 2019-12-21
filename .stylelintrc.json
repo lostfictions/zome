@@ -17,7 +17,6 @@
     "shorthand-property-no-redundant-values": true,
     "declaration-empty-line-before": null,
     "no-descending-specificity": null,
-    "font-family-no-missing-generic-family-keyword": null,
     "comment-empty-line-before": null,
     "selector-nested-pattern": "^&",
     "css-modules/composed-class-names": true,

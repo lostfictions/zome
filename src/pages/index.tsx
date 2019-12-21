@@ -1,15 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
-import styles from "./index.module.css";
+import styled, { css } from "astroturf";
+
+const { button } = css`
+  .button {
+    color: black;
+    border: 1px solid black;
+    background-color: white;
+    display: inline-block;
+  }
+`;
+
+const Butt = styled.div`
+  background-color: lime;
+`;
+
+const Whatever = styled.button<{ primary?: boolean; color?: "green" }>`
+  color: black;
+  border: 1px solid black;
+  background-color: white;
+
+  &.primary {
+    background-color: blue;
+    border: 1px solid blue;
+  }
+
+  &.color-green {
+    color: green;
+  }
+`;
 
 const Index: React.FC = () => {
+  const [primary, setPrimary] = useState(false);
+  useEffect(() => {
+    const x = setInterval(() => setPrimary(!primary), 1000);
+    return () => clearInterval(x);
+  }, [primary, setPrimary]);
+
   return (
-    <div className={styles.butt}>
+    <Butt>
       <Link href="/other">
         <a>meets</a>
       </Link>
-    </div>
+      <div className={button}>greets</div>
+      <Whatever primary={primary} color="green">
+        sdoi
+      </Whatever>
+    </Butt>
   );
 };
 
