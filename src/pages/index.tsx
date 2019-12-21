@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-
 import styled, { css } from "astroturf";
+
+import { withApollo } from "~/apollo/client";
+import PostList from "~/components/PostList";
 
 const { button } = css`
   .button {
@@ -47,8 +49,9 @@ const Index: React.FC = () => {
       <Whatever primary={primary} color="green">
         sdoi
       </Whatever>
+      <PostList />
     </Butt>
   );
 };
 
-export default Index;
+export default withApollo(Index);
