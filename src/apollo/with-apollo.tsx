@@ -1,25 +1,53 @@
-import React from "react";
+import React, { ComponentType } from "react";
 import { NextPage, NextPageContext } from "next";
 import Head from "next/head";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
-let apolloClient: ApolloClient<unknown> | null = null;
+/** In the browser, there's no need to recreate the client on every request, */
+let cachedApolloClient: ApolloClient<unknown> | null = null;
+
+type WithApolloProps =
+  | {
+      // Apollo SSR prepass
+      phase: "prepass";
+      apolloClient: ApolloClient<unknown>;
+    }
+  | {
+      // Next SSR
+      phase: "ssr";
+      token?: string;
+      apolloState: unknown;
+    }
+  | {
+      // Client-side (first load or after init)
+      phase: "client";
+      apolloState?: unknown;
+    };
 
 export function withApollo<P, IP>(
   PageComponent: NextPage<P, IP>,
   { ssr = true } = {}
 ) {
   const WithApollo = ({
-    // eslint-disable-next-line no-shadow
-    apolloClient,
-    apolloState,
-    pageProps
-  }: {
-    apolloClient?: ApolloClient<unknown>;
-    apolloState?: unknown;
-    pageProps: P;
-  }) => {
-    const client = apolloClient || initApolloClient(apolloState);
+    pageProps,
+    ...props
+  }: { pageProps: P } & WithApolloProps) => {
+    // console.log(props.phase);
+    const client = (() => {
+      switch (props.phase) {
+        case "prepass":
+          return props.apolloClient;
+        case "ssr":
+          return getApolloClient(props.token, props.apolloState);
+        case "client":
+          return getApolloClient(undefined, props.apolloState);
+        default: {
+          const p: never = props;
+          throw new Error(`unexpected state: ${p}`);
+        }
+      }
+    })();
+
     return (
       <ApolloProvider client={client}>
         <PageComponent {...pageProps} />
@@ -42,27 +70,40 @@ export function withApollo<P, IP>(
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (
       ctx: NextPageContext & { apolloClient: ApolloClient<unknown> }
-    ) => {
-      const { AppTree } = ctx;
+    ): Promise<{ pageProps: P } & WithApolloProps> => {
+      const { AppTree } = ctx as {
+        AppTree: ComponentType<{
+          pageProps: { pageProps: unknown } & WithApolloProps;
+        }>;
+      };
+
+      let token: string | undefined;
+      if (typeof window === "undefined") {
+        const cookie = await import("cookie");
+        if (ctx.req && ctx.req.headers.cookie) {
+          token = cookie.parse(ctx.req.headers.cookie).token;
+        }
+      }
 
       // Initialize ApolloClient, add it to the ctx object so
       // we can use it in `PageComponent.getInitialProps`.
       // TODO: evaluate whether this is needed
-      // eslint-disable-next-line no-shadow
-      const apolloClient = (ctx.apolloClient = initApolloClient());
+      const apolloClient = (ctx.apolloClient = getApolloClient(token));
 
       // Run wrapped getInitialProps methods
-      let pageProps = {};
+      let pageProps: any;
       if (PageComponent.getInitialProps) {
         pageProps = await PageComponent.getInitialProps(ctx);
       }
 
+      let phase: "ssr" | "client" = "client";
       // Only on the server:
       if (typeof window === "undefined") {
+        phase = "ssr";
         // When redirecting, the response is finished.
         // No point in continuing to render
         if (ctx.res && ctx.res.finished) {
-          return pageProps;
+          return { pageProps } as any;
         }
 
         // Only if ssr is enabled
@@ -74,6 +115,7 @@ export function withApollo<P, IP>(
               <AppTree
                 pageProps={{
                   pageProps,
+                  phase: "prepass",
                   apolloClient
                 }}
               />
@@ -94,10 +136,20 @@ export function withApollo<P, IP>(
       // Extract query data from the Apollo store
       const apolloState = apolloClient.cache.extract();
 
-      return {
-        pageProps,
-        apolloState
-      };
+      // console.log(apolloState);
+
+      return phase === "client"
+        ? {
+            phase,
+            pageProps,
+            apolloState
+          }
+        : {
+            phase,
+            token,
+            pageProps,
+            apolloState
+          };
     };
   }
 
@@ -108,43 +160,64 @@ export function withApollo<P, IP>(
  * Always creates a new Apollo client on the server;
  * creates or reuses Apollo client in the browser.
  */
-function initApolloClient(initialState?: unknown) {
+function getApolloClient(token?: string, initialState?: unknown) {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === "undefined") {
-    return createApolloClient(initialState);
+    // console.log(
+    //   "creating client",
+    //   token ? "with token" : "",
+    //   initialState ? "with initial state" : ""
+    // );
+    return createApolloClient(token, initialState);
   }
 
   // Reuse client on the client-side
-  if (!apolloClient) {
-    apolloClient = createApolloClient(initialState);
+  if (!cachedApolloClient) {
+    // console.log("creating client on the client-side");
+    cachedApolloClient = createApolloClient(undefined, initialState);
   }
+  // console.log("got client on the client-side");
 
-  return apolloClient;
+  return cachedApolloClient;
 }
 
-function createApolloClient(initialState: unknown = {}) {
+function createApolloClient(token?: string, initialState: unknown = {}) {
   const ssrMode = typeof window === "undefined";
   const cache = new InMemoryCache().restore(initialState as any);
 
-  // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
-  return new ApolloClient({
-    ssrMode,
-    link: createIsomorphLink(),
-    cache
-  });
-}
-
-function createIsomorphLink() {
+  let link: any; /* incompatible typings for SchemaLink right now */
   if (typeof window === "undefined") {
-    const { SchemaLink } = require("apollo-link-schema");
-    const { schema } = require("../gql/schema");
-    return new SchemaLink({ schema });
+    const {
+      SchemaLink
+    } = require("apollo-link-schema") as typeof import("apollo-link-schema");
+    const {
+      schema
+    } = require("../gql/schema") as typeof import("../gql/schema");
+    const {
+      createContext
+    } = require("../gql/context") as typeof import("../gql/context");
+
+    link = new SchemaLink({
+      schema,
+      context: createContext({
+        req: { cookies: { token } } as any
+      })
+    });
   } else {
-    const { HttpLink } = require("@apollo/client");
-    return new HttpLink({
+    const {
+      HttpLink
+    } = require("@apollo/client") as typeof import("@apollo/client");
+    link = new HttpLink({
       uri: "/api/graphql",
       credentials: "same-origin"
     });
   }
+
+  return new ApolloClient({
+    ssrMode,
+    link,
+    cache
+    // ssrForceFetchDelay: 100
+  });
 }
