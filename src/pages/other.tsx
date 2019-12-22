@@ -12,7 +12,7 @@ const Other: React.FC = () => {
   return (
     <div className={butt}>
       <Link href="/">
-        <a>meets</a>
+        <a>greets</a>
       </Link>
     </div>
   );

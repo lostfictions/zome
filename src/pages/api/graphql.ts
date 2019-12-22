@@ -1,3 +1,5 @@
+import "~/server/sourcemaps";
+
 import { ApolloServer } from "apollo-server-micro";
 
 import { schema } from "~/gql/schema";

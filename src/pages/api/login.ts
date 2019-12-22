@@ -1,90 +1,102 @@
-// vaguely inspired by https://github.com/microauth/microauth-slack
+import "~/server/sourcemaps";
+
 import querystring from "querystring";
-import url from "url";
 
 import uuid from "uuid";
 import fetch from "node-fetch";
 import { sign } from "jsonwebtoken";
-import { cleanEnv, str } from "envalid";
-import { Photon } from "@prisma/photon";
 import cookie from "cookie";
 
+import photon from "~/server/photon";
 import handler from "~/server/handler";
+import {
+  DISCORD_CLIENT_SECRET as client_secret,
+  DISCORD_CLIENT_ID as client_id,
+  APP_SECRET,
+  HOST
+} from "~/server/env";
+
+import { NextApiResponse } from "next";
 
 const DISCORD_URL = "https://discordapp.com";
 const AUTHORIZE_URL = `${DISCORD_URL}/api/oauth2/authorize`;
 const TOKEN_URL = `${DISCORD_URL}/api/oauth2/token`;
 const USER_URL = `${DISCORD_URL}/api/users/@me`;
 
-const {
-  DISCORD_CLIENT_SECRET: client_secret,
-  DISCORD_CLIENT_ID: client_id,
-  APP_SECRET,
-  HOST
-} = cleanEnv(
-  process.env,
-  {
-    DISCORD_CLIENT_SECRET: str(),
-    DISCORD_CLIENT_ID: str(),
-    APP_SECRET: str(),
-    HOST: str({ devDefault: "http://localhost:3000" })
-  },
-  { strict: true }
-);
-
 const scope = ["identify", "guilds"].join(" ");
 
-const photon = new Photon();
-
-/** From state id to redirect url */
+/** From state id to the url we return to on successful auth */
 const states = new Map<string, string>();
 
+/**
+ * The oauth redirect uri is always the route we're currently on, which we
+ * determine once and then cache.
+ */
+let redirect_uri: string = null as any;
+
 export default handler(async function login(req, res) {
-  const { query, pathname } = url.parse(req.url!);
-  const parsed = querystring.parse(query!);
+  const { searchParams, pathname } = new URL(req.url!, HOST);
+  if (!redirect_uri) redirect_uri = `${HOST}${pathname}`;
 
-  const redirect_uri = `${HOST}${pathname}`;
+  // TODO: verify already logged in?
 
-  if (parsed.return_to) {
-    const state = uuid.v4();
-    states.set(state, parsed.return_to as string);
-    setTimeout(() => {
-      states.delete(state);
-    }, 1000 * 60 * 30);
-
-    res.statusCode = 302;
-    res.setHeader(
-      "Location",
-      `${AUTHORIZE_URL}?${querystring.stringify({
-        response_type: "code",
-        prompt: "none",
-        client_id,
-        redirect_uri,
-        scope,
-        state
-      })}`
-    );
-    res.end();
-    return;
+  const state = searchParams.get("state");
+  if (state) {
+    const code = searchParams.get("code");
+    if (!code) {
+      throw new Error("Both search and code are required to complete auth!");
+    }
+    return completeAuth(res, state, code);
   }
 
-  if (!parsed.state) {
-    throw new Error("Either return_to or code and state required");
+  const returnTo = searchParams.get("return_to") || req.headers.referer;
+  return redirectAuthorize(res, returnTo);
+});
+
+function redirectAuthorize(res: NextApiResponse, returnTo?: string) {
+  let finalReturn = "/";
+  if (returnTo) {
+    // Disallow open redirect. If we need to get fancy later we can whitelist
+    // specific routes.
+    const { origin, pathname } = new URL(returnTo, HOST);
+    if (origin !== HOST) {
+      console.warn(`return_to origin doesn't match: "${returnTo}"`);
+    } else {
+      finalReturn = pathname;
+    }
   }
 
-  const returnTo = states.get(parsed.state as string);
+  const state = uuid.v4();
+  states.set(state, finalReturn);
+  setTimeout(() => {
+    states.delete(state);
+  }, 1000 * 60 * 30);
+
+  res.statusCode = 302;
+  res.setHeader(
+    "Location",
+    `${AUTHORIZE_URL}?${querystring.stringify({
+      response_type: "code",
+      prompt: "none",
+      client_id,
+      redirect_uri,
+      scope,
+      state
+    })}`
+  );
+  res.end();
+  return;
+}
+
+async function completeAuth(res: NextApiResponse, state: string, code: string) {
+  const returnTo = states.get(state);
   if (!returnTo) {
     // TODO: might've waited on the auth screen too long, say. just redirect
     // somewhere with a better error message?
     throw new Error("Invalid state!");
   }
 
-  states.delete(parsed.state as string);
-
-  const code = parsed.code as string;
-  if (!code) {
-    throw new Error("Code is required!");
-  }
+  states.delete(state);
 
   const response = await fetch(TOKEN_URL, {
     method: "POST",
@@ -130,20 +142,19 @@ export default handler(async function login(req, res) {
     }
   });
 
-  const jwt = sign({ userId: account.id }, APP_SECRET, {
-    expiresIn: response.expires_in
-  });
+  const jwt = sign(account.id, APP_SECRET);
 
   res.setHeader(
     "Set-Cookie",
     cookie.serialize("token", jwt, {
       path: "/",
       httpOnly: true,
-      maxAge: response.expires_in
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax"
     })
   );
   res.statusCode = 302;
   res.setHeader("Location", returnTo);
   res.end();
   return;
-});
+}
