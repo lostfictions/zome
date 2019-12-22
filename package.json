@@ -10,7 +10,7 @@
     "sb": "start-storybook -p 6006 --ci",
     "generate": "run-s -l generate:*",
     "generate:prisma": "prisma2 generate",
-    "generate:nexus": "babel-node --extensions='.ts' src/gql/schema",
+    "generate:nexus": "GEN_NEXUS=y babel-node --extensions='.ts' src/gql/schema",
     "generate:client": "graphql-codegen --config codegen.json",
     "prisma:seed": "babel-node --extensions='.ts' prisma/seed",
     "prisma:dev": "prisma2 dev",

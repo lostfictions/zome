@@ -46,10 +46,7 @@ export type QueryPostArgs = {
 
 export type User = {
    __typename?: 'User',
-  email: Scalars['String'],
-  id: Scalars['ID'],
-  name?: Maybe<Scalars['String']>,
-  posts: Array<Post>,
+  id: Scalars['String'],
 };
 
 export type FeedQueryVariables = {};

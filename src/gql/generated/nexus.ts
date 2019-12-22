@@ -62,10 +62,7 @@ export interface NexusGenFieldTypes {
   };
   User: {
     // field return type
-    email: string; // String!
-    id: string; // ID!
-    name: string | null; // String
-    posts: NexusGenRootTypes["Post"][]; // [Post!]!
+    id: string; // String!
   };
 }
 

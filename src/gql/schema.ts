@@ -4,7 +4,7 @@ import { makeSchema } from "nexus";
 import * as types from "./types";
 
 export const schema = makeSchema({
-  shouldGenerateArtifacts: process.env.NODE_ENV === "development",
+  shouldGenerateArtifacts: Boolean(process.env["GEN_NEXUS"]),
   types,
   plugins: [nexusPrismaPlugin()],
   outputs: {
