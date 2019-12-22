@@ -42,6 +42,8 @@ const Index: React.FC = () => {
 
   return (
     <Butt>
+      <a href="/api/login?return_to=/">login</a>
+
       <Link href="/other">
         <a>meets</a>
       </Link>

@@ -21,7 +21,7 @@
     "test:stylelint": "stylelint 'src/**/*.{css,tsx}'",
     "test:jest": "jest --colors --env=jsdom",
     "prettier": "prettier --write '{src,test}/**/*.{css,js,ts,tsx}'",
-    "postinstall": "run-s generate"
+    "postinstall": "echo remember to reenable run-s generate"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.16",
@@ -35,11 +35,11 @@
     "apollo-server-micro": "^2.9.14",
     "astroturf": "^0.10.2",
     "classnames": "^2.2.6",
+    "cookie": "^0.4.0",
     "envalid": "^6.0.0",
     "graphql": "14.5.8",
     "graphql-tag": "^2.10.1",
     "jsonwebtoken": "^8.5.1",
-    "micro": "^9.3.4",
     "next": "^9.1.5",
     "next-compose-plugins": "^2.2.0",
     "next-fonts": "^0.19.0",
@@ -62,9 +62,9 @@
     "@storybook/addon-info": "^5.2.8",
     "@storybook/addons": "^5.2.8",
     "@storybook/react": "^5.2.8",
+    "@types/cookie": "^0.3.3",
     "@types/jest": "^24.0.24",
     "@types/jsonwebtoken": "^8.3.5",
-    "@types/micro": "^7.3.3",
     "@types/node-fetch": "^2.5.4",
     "@types/uuid": "^3.4.6",
     "@typescript-eslint/eslint-plugin": "2.12.0",

@@ -1,16 +1,16 @@
 import { Photon } from "@prisma/photon";
-import { MicroRequest } from "apollo-server-micro/dist/types";
+import { NextApiRequest } from "next";
 
 const photon = new Photon();
 
 export interface Context {
   photon: Photon;
-  request: MicroRequest;
+  req: NextApiRequest;
 }
 
-export function createContext(request: MicroRequest): Context {
+export function createContext({ req }: { req: NextApiRequest }): Context {
   return {
-    request,
+    req,
     photon
   };
 }

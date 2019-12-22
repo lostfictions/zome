@@ -2,12 +2,14 @@
 import querystring from "querystring";
 import url from "url";
 
-import micro from "micro";
 import uuid from "uuid";
 import fetch from "node-fetch";
 import { sign } from "jsonwebtoken";
 import { cleanEnv, str } from "envalid";
 import { Photon } from "@prisma/photon";
+import cookie from "cookie";
+
+import handler from "~/server/handler";
 
 const DISCORD_URL = "https://discordapp.com";
 const AUTHORIZE_URL = `${DISCORD_URL}/api/oauth2/authorize`;
@@ -37,7 +39,7 @@ const photon = new Photon();
 /** From state id to redirect url */
 const states = new Map<string, string>();
 
-export default micro(async (req, res) => {
+export default handler(async function login(req, res) {
   const { query, pathname } = url.parse(req.url!);
   const parsed = querystring.parse(query!);
 
@@ -62,7 +64,8 @@ export default micro(async (req, res) => {
         state
       })}`
     );
-    return res.end();
+    res.end();
+    return;
   }
 
   if (!parsed.state) {
@@ -101,7 +104,7 @@ export default micro(async (req, res) => {
   const accessToken = response.access_token;
 
   if (!accessToken) {
-    throw new Error("Expected access token in response!");
+    throw new Error("Expected access token in response to auth grant request!");
   }
 
   const account = await fetch(USER_URL, {
@@ -127,13 +130,20 @@ export default micro(async (req, res) => {
     }
   });
 
-  const token = sign({ userId: account.id }, APP_SECRET, {
+  const jwt = sign({ userId: account.id }, APP_SECRET, {
     expiresIn: response.expires_in
   });
 
-  return {
-    token
-  };
-
-  // TODO: handle return-to url
+  res.setHeader(
+    "Set-Cookie",
+    cookie.serialize("token", jwt, {
+      path: "/",
+      httpOnly: true,
+      maxAge: response.expires_in
+    })
+  );
+  res.statusCode = 302;
+  res.setHeader("Location", returnTo);
+  res.end();
+  return;
 });
