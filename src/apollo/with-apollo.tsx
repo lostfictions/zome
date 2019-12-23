@@ -15,7 +15,7 @@ type WithApolloProps =
   | {
       // Next SSR
       phase: "ssr";
-      token?: string;
+      session?: string;
       apolloState: unknown;
     }
   | {
@@ -38,7 +38,7 @@ export function withApollo<P, IP>(
         case "prepass":
           return props.apolloClient;
         case "ssr":
-          return getApolloClient(props.token, props.apolloState);
+          return getApolloClient(props.session, props.apolloState);
         case "client":
           return getApolloClient(undefined, props.apolloState);
         default: {
@@ -77,18 +77,18 @@ export function withApollo<P, IP>(
         }>;
       };
 
-      let token: string | undefined;
+      let session: string | undefined;
       if (typeof window === "undefined") {
         const cookie = await import("cookie");
         if (ctx.req && ctx.req.headers.cookie) {
-          token = cookie.parse(ctx.req.headers.cookie).token;
+          session = cookie.parse(ctx.req.headers.cookie).session;
         }
       }
 
       // Initialize ApolloClient, add it to the ctx object so
       // we can use it in `PageComponent.getInitialProps`.
       // TODO: evaluate whether this is needed
-      const apolloClient = (ctx.apolloClient = getApolloClient(token));
+      const apolloClient = (ctx.apolloClient = getApolloClient(session));
 
       // Run wrapped getInitialProps methods
       let pageProps: any;
@@ -146,7 +146,7 @@ export function withApollo<P, IP>(
           }
         : {
             phase,
-            token,
+            session,
             pageProps,
             apolloState
           };
@@ -182,7 +182,7 @@ function getApolloClient(token?: string, initialState?: unknown) {
   return cachedApolloClient;
 }
 
-function createApolloClient(token?: string, initialState: unknown = {}) {
+function createApolloClient(session?: string, initialState: unknown = {}) {
   const ssrMode = typeof window === "undefined";
   const cache = new InMemoryCache().restore(initialState as any);
 
@@ -200,9 +200,7 @@ function createApolloClient(token?: string, initialState: unknown = {}) {
 
     link = new SchemaLink({
       schema,
-      context: createContext({
-        req: { cookies: { token } } as any
-      })
+      context: createContext({ session })
     });
   } else {
     const {

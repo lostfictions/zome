@@ -142,11 +142,11 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
     }
   });
 
-  const jwt = sign(account.id, APP_SECRET);
+  const sessionCookie = sign(account.id, APP_SECRET);
 
   res.setHeader(
     "Set-Cookie",
-    cookie.serialize("token", jwt, {
+    cookie.serialize("session", sessionCookie, {
       path: "/",
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 365,

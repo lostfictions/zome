@@ -1,20 +1,26 @@
 import { idArg, queryType, stringArg } from "nexus";
-// import { getUserId } from '../utils'
-
-const getUserId = (_ctx: any) => "bort";
 
 export const Query = queryType({
   definition(t) {
     t.field("me", {
       type: "User",
       nullable: true,
-      resolve: (_parent, _args, ctx) => {
-        const userId = getUserId(ctx.request);
-        return ctx.photon.users.findOne({
-          where: {
-            id: userId
-          }
-        });
+      resolve: async (_parent, _args, ctx) => {
+        console.log("promise", Boolean((ctx as any).then));
+        console.log(Object.keys(ctx));
+        console.log((ctx as any)["_extensionStack"]);
+        const { user, dataSources } = await ctx;
+        if (!user) return null;
+
+        const discordUser = await dataSources.discordApi.getMe();
+
+        const { username, avatar } = discordUser;
+
+        return {
+          ...user,
+          username,
+          avatar
+        };
       }
     });
 

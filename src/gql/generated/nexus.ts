@@ -62,7 +62,9 @@ export interface NexusGenFieldTypes {
   };
   User: {
     // field return type
+    avatar: string | null; // String
     id: string; // String!
+    username: string | null; // String
   };
 }
 
