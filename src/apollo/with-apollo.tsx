@@ -1,7 +1,12 @@
 import React, { ComponentType } from "react";
 import { NextPage, NextPageContext } from "next";
 import Head from "next/head";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  HttpLink
+} from "@apollo/client";
 
 /** In the browser, there's no need to recreate the client on every request, */
 let cachedApolloClient: ApolloClient<unknown> | null = null;
@@ -160,33 +165,9 @@ export function withApollo<P, IP>(
  * Always creates a new Apollo client on the server;
  * creates or reuses Apollo client in the browser.
  */
-function getApolloClient(token?: string, initialState?: unknown) {
+function getApolloClient(session?: string, initialState?: unknown) {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
-  if (typeof window === "undefined") {
-    // console.log(
-    //   "creating client",
-    //   token ? "with token" : "",
-    //   initialState ? "with initial state" : ""
-    // );
-    return createApolloClient(token, initialState);
-  }
-
-  // Reuse client on the client-side
-  if (!cachedApolloClient) {
-    // console.log("creating client on the client-side");
-    cachedApolloClient = createApolloClient(undefined, initialState);
-  }
-  // console.log("got client on the client-side");
-
-  return cachedApolloClient;
-}
-
-function createApolloClient(session?: string, initialState: unknown = {}) {
-  const ssrMode = typeof window === "undefined";
-  const cache = new InMemoryCache().restore(initialState as any);
-
-  let link: any; /* incompatible typings for SchemaLink right now */
   if (typeof window === "undefined") {
     const {
       SchemaLink
@@ -198,24 +179,28 @@ function createApolloClient(session?: string, initialState: unknown = {}) {
       createContext
     } = require("../gql/context") as typeof import("../gql/context");
 
-    link = new SchemaLink({
-      schema,
-      context: createContext({ session })
-    });
-  } else {
-    const {
-      HttpLink
-    } = require("@apollo/client") as typeof import("@apollo/client");
-    link = new HttpLink({
-      uri: "/api/graphql",
-      credentials: "same-origin"
+    return new ApolloClient({
+      ssrMode: true,
+      link: new SchemaLink({
+        schema,
+        context: createContext({ session })
+      }) as any /* bad typings */,
+      cache: new InMemoryCache().restore(initialState as any)
+      // ssrForceFetchDelay: 100
     });
   }
 
-  return new ApolloClient({
-    ssrMode,
-    link,
-    cache
-    // ssrForceFetchDelay: 100
-  });
+  // Reuse client on the client-side
+  if (!cachedApolloClient) {
+    cachedApolloClient = new ApolloClient({
+      link: new HttpLink({
+        uri: "/api/graphql",
+        credentials: "same-origin"
+      }),
+      cache: new InMemoryCache().restore(initialState as any)
+      // ssrForceFetchDelay: 100
+    });
+  }
+
+  return cachedApolloClient;
 }
