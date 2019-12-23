@@ -13476,6 +13476,18 @@ stylelint-config-css-modules@^1.5.0:
   resolved "https://registry.yarnpkg.com/stylelint-config-css-modules/-/stylelint-config-css-modules-1.5.0.tgz#c7d901db052f5a2ee3135dde51490d34c281add3"
   integrity sha512-Zz0Q8VLpUcgOXIuXWz7Iq5FkyF6e3eYAZoA6NpJpzux+lL99z11j5tTdcEHoPwB2YDXxbB50QypCuaQp80YuXQ==
 
+stylelint-config-lostfictions@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/stylelint-config-lostfictions/-/stylelint-config-lostfictions-0.9.1.tgz#6f7e62d5aefcfd6121e9fb2ed0a021d6302a7b4d"
+  integrity sha512-XVvaLgXuChORAGr7xEOsyqtr1YA4BfYBIiCA13e5TGeXpvxIpeK+ep+aASZg+WyZPMtX8Z4lqe6A+uVaGjFqVA==
+  dependencies:
+    stylelint-config-css-modules "^1.5.0"
+    stylelint-config-prettier "^7.0.0"
+    stylelint-config-standard "^19.0.0"
+    stylelint-media-use-custom-media "^1.0.0"
+    stylelint-value-no-exposed-custom-properties "^2.2.0"
+    stylelint-value-no-unknown-custom-properties "^2.0.0"
+
 stylelint-config-prettier@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/stylelint-config-prettier/-/stylelint-config-prettier-7.0.0.tgz#a34bd0686dc22f9394271a59b9d7a8a58ec92452"
@@ -13492,10 +13504,6 @@ stylelint-config-standard@^19.0.0:
   integrity sha512-VvcODsL1PryzpYteWZo2YaA5vU/pWfjqBpOvmeA8iB2MteZ/ZhI1O4hnrWMidsS4vmEJpKtjdhLdfGJmmZm6Cg==
   dependencies:
     stylelint-config-recommended "^3.0.0"
-
-stylelint-css-modules@reflector-six/stylelint-css-modules#7bc1101:
-  version "0.9.0"
-  resolved "https://codeload.github.com/reflector-six/stylelint-css-modules/tar.gz/7bc11015688950b39cb278f68f04db26dcae93ed"
 
 stylelint-media-use-custom-media@^1.0.0:
   version "1.0.0"
