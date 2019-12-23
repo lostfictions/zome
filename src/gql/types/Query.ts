@@ -6,10 +6,7 @@ export const Query = queryType({
       type: "User",
       nullable: true,
       resolve: async (_parent, _args, ctx) => {
-        console.log("promise", Boolean((ctx as any).then));
-        console.log(Object.keys(ctx));
-        console.log((ctx as any)["_extensionStack"]);
-        const { user, dataSources } = await ctx;
+        const { user, dataSources } = ctx;
         if (!user) return null;
 
         const discordUser = await dataSources.discordApi.getMe();

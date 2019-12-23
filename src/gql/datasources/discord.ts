@@ -4,8 +4,8 @@ import { BaseContext } from "../context";
 import { User, UserGuild } from "./discord-api";
 
 export default class DiscordApi extends RESTDataSource<BaseContext> {
-  constructor() {
-    super();
+  constructor(fetch?: any) {
+    super(fetch);
     this.baseURL = "https://discordapp.com/api/";
   }
 

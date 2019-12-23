@@ -1,14 +1,33 @@
 import { ApolloLink, Operation, FetchResult, Observable } from "apollo-link";
 import { execute } from "graphql/execution/execute";
-import { GraphQLSchema } from "graphql/type/schema";
+import fetch from "node-fetch";
 
 import { schema as gqlSchema } from "../gql/schema";
-import { createContext } from "../gql/context";
+import { createContext, createDataSources } from "../gql/context";
+
+import { GraphQLSchema } from "graphql/type/schema";
+import { DataSource } from "apollo-datasource";
+
+// HACK: the official SchemaLink has a number of shortcomings -- it doesn't
+// resolve async context getters, and doesn't merge in Apollo Server datasources
+// (arguably not its job, but stll a problem). so provide our own Link that
+// does. See https://github.com/apollographql/apollo-link/issues/1208 for
+// further context.
 
 export function makeSchemaLink(session?: string) {
+  const context = createContext({ session }).then(ctx => {
+    const dataSources = createDataSources(fetch);
+    for (const ds of Object.values(dataSources) as DataSource[]) {
+      // no-unused-expressions doesn't like conditional call yet?
+      // eslint-disable-next-line no-unused-expressions
+      ds.initialize?.({ context: ctx, cache: undefined as any });
+    }
+    return { ...ctx, dataSources };
+  });
+
   return (new SchemaLink({
     schema: gqlSchema,
-    context: createContext({ session })
+    context
   }) as unknown) as import("@apollo/client").ApolloLink; /* incompatible typings */
 }
 
@@ -31,9 +50,6 @@ interface Options {
   context?: ResolverContextFunction | Record<string, any>;
 }
 
-// HACK: the official SchemaLink doesn't resolve async context getters, so
-// provide our own that does. See
-// https://github.com/apollographql/apollo-link/issues/1208 for further context.
 export class SchemaLink extends ApolloLink {
   public schema: GraphQLSchema;
   public rootValue: any;

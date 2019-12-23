@@ -18,7 +18,7 @@ type WithApolloProps =
       apolloClient: ApolloClient<unknown>;
     }
   | {
-      // Next SSR or initial render on the client?
+      // Next SSR or initial render on the client
       phase: "ssr";
       session?: string;
       apolloState: unknown;
@@ -37,7 +37,7 @@ export function withApollo<P, IP>(
     pageProps,
     ...props
   }: { pageProps: P } & WithApolloProps) => {
-    console.log(process.browser ? "client" : "server", props.phase);
+    // console.log(process.browser ? "client" : "server", props.phase);
 
     const client = (() => {
       switch (props.phase) {
@@ -142,7 +142,7 @@ export function withApollo<P, IP>(
       // Extract query data from the Apollo store
       const apolloState = apolloClient.cache.extract();
 
-      // console.log(apolloState);
+      // console.log("extracted state", apolloState);
 
       return phase === "client"
         ? {
