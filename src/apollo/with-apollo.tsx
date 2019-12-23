@@ -18,7 +18,7 @@ type WithApolloProps =
       apolloClient: ApolloClient<unknown>;
     }
   | {
-      // Next SSR
+      // Next SSR or initial render on the client?
       phase: "ssr";
       session?: string;
       apolloState: unknown;
@@ -37,7 +37,8 @@ export function withApollo<P, IP>(
     pageProps,
     ...props
   }: { pageProps: P } & WithApolloProps) => {
-    // console.log(props.phase);
+    console.log(process.browser ? "client" : "server", props.phase);
+
     const client = (() => {
       switch (props.phase) {
         case "prepass":
@@ -170,21 +171,12 @@ function getApolloClient(session?: string, initialState?: unknown) {
   // isn't shared between connections (which would be bad)
   if (typeof window === "undefined") {
     const {
-      SchemaLink
-    } = require("apollo-link-schema") as typeof import("apollo-link-schema");
-    const {
-      schema
-    } = require("../gql/schema") as typeof import("../gql/schema");
-    const {
-      createContext
-    } = require("../gql/context") as typeof import("../gql/context");
+      makeSchemaLink
+    } = require("../server/schema-link") as typeof import("../server/schema-link");
 
     return new ApolloClient({
       ssrMode: true,
-      link: new SchemaLink({
-        schema,
-        context: createContext({ session })
-      }) as any /* bad typings */,
+      link: makeSchemaLink(session),
       cache: new InMemoryCache().restore(initialState as any)
       // ssrForceFetchDelay: 100
     });

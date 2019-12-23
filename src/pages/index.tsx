@@ -56,12 +56,12 @@ const Whatever = styled.button<{ primary?: boolean; color?: "green" }>`
   }
 `;
 
-const getAvatar = (id: string, avatar?: string | null) => {
-  if (!avatar) {
+const getAvatar = (id: string, avatarId?: string | null) => {
+  if (!avatarId) {
     return `https://cdn.discordapp.com/embed/avatars/${parseInt(id) % 5}.png`;
   }
-  const ext = avatar.startsWith("a_") ? "gif" : "png";
-  return `https://cdn.discordapp.com/avatars/${id}/${avatar}.${ext}`;
+  const ext = avatarId.startsWith("a_") ? "gif" : "png";
+  return `https://cdn.discordapp.com/avatars/${id}/${avatarId}.${ext}`;
 };
 
 const UserIcon: React.FC = () => {
@@ -71,6 +71,7 @@ const UserIcon: React.FC = () => {
   if (loading) {
     icon = <div>...</div>;
   } else if (error) {
+    console.warn(error);
     icon = <div>{JSON.stringify(error)}</div>;
   } else if (data && data.me) {
     icon = (

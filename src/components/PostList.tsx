@@ -17,6 +17,7 @@ const PostList = () => {
 
   if (loading) return <div>loading...</div>;
   if (!data || error) {
+    console.warn(error);
     return (
       <div>
         error! <pre>{JSON.stringify(error)}</pre>
