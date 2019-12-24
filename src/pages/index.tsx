@@ -5,7 +5,6 @@ import gql from "graphql-tag";
 
 import { withApollo } from "~/apollo/with-apollo";
 import { useMeQuery } from "~/apollo/generated/client";
-import PostList from "~/components/PostList";
 
 gql`
   query Me {
@@ -107,7 +106,6 @@ const Index: React.FC = () => {
       <Whatever primary={primary} color="green">
         sdoi
       </Whatever>
-      <PostList />
       <UserIcon />
     </Butt>
   );
