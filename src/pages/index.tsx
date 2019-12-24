@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import styled, { css } from "astroturf";
 import gql from "graphql-tag";
 
 import { withApollo } from "~/apollo/with-apollo";
 import { useMeQuery } from "~/apollo/generated/client";
+import Dropzone from "~/components/Dropzone";
 
 gql`
   query Me {
@@ -38,21 +39,6 @@ const { button, icongroup, avatar } = css`
 
 const Butt = styled.div`
   background-color: lime;
-`;
-
-const Whatever = styled.button<{ primary?: boolean; color?: "green" }>`
-  color: black;
-  border: 1px solid black;
-  background-color: white;
-
-  &.primary {
-    background-color: blue;
-    border: 1px solid blue;
-  }
-
-  &.color-green {
-    color: green;
-  }
 `;
 
 const getAvatar = (id: string, avatarId?: string | null) => {
@@ -91,21 +77,13 @@ const UserIcon: React.FC = () => {
 };
 
 const Index: React.FC = () => {
-  const [primary, setPrimary] = useState(false);
-  useEffect(() => {
-    const x = setInterval(() => setPrimary(!primary), 1000);
-    return () => clearInterval(x);
-  }, [primary, setPrimary]);
-
   return (
     <Butt>
+      <Dropzone />
       <Link href="/other">
         <a>meets</a>
       </Link>
       <div className={button}>greets</div>
-      <Whatever primary={primary} color="green">
-        sdoi
-      </Whatever>
       <UserIcon />
     </Butt>
   );
