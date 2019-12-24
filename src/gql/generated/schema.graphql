@@ -2,28 +2,13 @@
 ### Do not make changes to this file directly
 
 
-type AuthPayload {
-  token: String!
-  user: User!
-}
-
-type Post {
-  author: User
-  content: String
-  id: ID!
-  published: Boolean!
-  title: String!
-}
-
 type Query {
-  feed: [Post!]!
-  filterPosts(searchString: String): [Post!]!
   me: User
-  post(id: ID): Post
 }
 
 type User {
   avatar: String
+  discriminator: String!
   id: String!
-  username: String
+  username: String!
 }

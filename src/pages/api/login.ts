@@ -53,7 +53,11 @@ export default handler(async function login(req, res) {
   return redirectAuthorize(res, returnTo);
 });
 
-function redirectAuthorize(res: NextApiResponse, returnTo?: string) {
+/**
+ * @param res The server response to write the redirect to.
+ * @param returnTo The local route to redirect to on authorization success.
+ */
+function redirectAuthorize(res: NextApiResponse, returnTo?: string): void {
   let finalReturn = "/";
   if (returnTo) {
     // Disallow open redirect. If we need to get fancy later we can whitelist
@@ -85,9 +89,15 @@ function redirectAuthorize(res: NextApiResponse, returnTo?: string) {
     })}`
   );
   res.end();
-  return;
 }
 
+/**
+ * Complete the auth process and redirect the user to the `returnTo` parameter
+ * provided in the initial call.
+ * @param res The server response to write the redirect to.
+ * @param state The state token we passed to the OAuth provider.
+ * @param code The code the client received from the OAuth provider.
+ */
 async function completeAuth(res: NextApiResponse, state: string, code: string) {
   const returnTo = states.get(state);
   if (!returnTo) {
@@ -98,7 +108,15 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
 
   states.delete(state);
 
-  const response = await fetch(TOKEN_URL, {
+  interface TokenResponse {
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+    refresh_token: string;
+    scope: string;
+  }
+
+  const response: TokenResponse = await fetch(TOKEN_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
@@ -129,16 +147,22 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
     throw new Error("Couldn't retrieve account info!");
   }
 
-  await photon.users.upsert({
+  const data = {
+    token: accessToken,
+    expires: Date.now() + response.expires_in * 1000,
+    refreshToken: response.refresh_token
+  };
+
+  await photon.discordUsers.upsert({
     where: {
       id: account.id
     },
     update: {
-      token: accessToken
+      ...data
     },
     create: {
       id: account.id,
-      token: accessToken
+      ...data
     }
   });
 
@@ -156,5 +180,4 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
   res.statusCode = 302;
   res.setHeader("Location", returnTo);
   res.end();
-  return;
 }

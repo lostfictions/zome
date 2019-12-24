@@ -1,4 +1,4 @@
-import { Photon, User } from "@prisma/photon";
+import { Photon, DiscordUser } from "@prisma/photon";
 
 import DiscordApi from "./datasources/discord";
 import photon from "~/server/photon";
@@ -8,7 +8,7 @@ export type Context = BaseContext & { dataSources: DataSources };
 
 export interface BaseContext {
   photon: Photon;
-  user: User | null;
+  user: DiscordUser | null;
 }
 
 export interface DataSources {
@@ -25,9 +25,9 @@ export async function createContext({
   session?: string;
 }): Promise<BaseContext> {
   const userId = getUserId(session);
-  let user: User | null = null;
+  let user: DiscordUser | null = null;
   if (userId) {
-    user = await photon.users.findOne({ where: { id: userId } });
+    user = await photon.discordUsers.findOne({ where: { id: userId } });
   }
 
   return {
