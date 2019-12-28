@@ -17,7 +17,6 @@ import { B2_ACCOUNT_ID, B2_APPLICATION_KEY } from "~/server/env";
 
 export default class B2Api extends RESTDataSource<BaseContext> {
   authToken?: string;
-  // apiUrl!: string;
   downloadUrl!: string;
   bucketId!: string;
   bucketName!: string;
@@ -25,51 +24,13 @@ export default class B2Api extends RESTDataSource<BaseContext> {
   /**
    * If we receive certain kinds of 401 error, we can reauth and retry the call,
    * but only once. This flag tracks whether an error was hit (set to true) or
-   * the last auth call was successful (set to false).
+   * the last auth call was successful (reset to false).
    */
   reauthAttempted = false;
 
   constructor() {
     super();
-    this.baseURL = "";
   }
-
-  // protected async get<TResult = any>(
-  //   path: string,
-  //   params?: URLSearchParamsInit,
-  //   init?: RequestInit
-  // ): Promise<TResult> {
-  //   if (!this.authToken) {
-  //     console.log("Authorizing B2...");
-  //     await this.authorize();
-  //   }
-
-  //   try {
-  //     return await super.get(path, params, init);
-  //   } catch (e) {
-  //     const status = e.extensions?.response?.body?.status;
-  //     const code = e.extensions?.response?.body?.code;
-  //     if (
-  //       !this.reauthAttempted &&
-  //       status === 401 &&
-  //       (code === "bad_auth_token" || code === "expired_auth_token")
-  //     ) {
-  //       this.reauthAttempted = true;
-  //       console.log(
-  //         `Re-authorizing B2 (last req: ${JSON.stringify(
-  //           e.extensions.response.body
-  //         )})`
-  //       );
-  //       await this.authorize();
-  //       return super.get(path, params, init);
-  //     }
-  //     console.error(
-  //       "Request error exts:",
-  //       JSON.stringify(e.extensions, null, 2)
-  //     );
-  //     throw e;
-  //   }
-  // }
 
   async willSendRequest(request: RequestOptions) {
     if (!this.authToken) {
@@ -78,6 +39,14 @@ export default class B2Api extends RESTDataSource<BaseContext> {
     request.headers.set("Authorization", this.authToken);
   }
 
+  /**
+   * We need to wrap requests with a closure (rather than, say, overriding the
+   * `get` method inherited from RESTDataSource) since some properties we pass
+   * for some calls may not be known until we authorize at least once.
+   *
+   * Even nicer would be async initialization, tracked in
+   * https://github.com/apollographql/apollo-server/pull/3639
+   */
   protected async wrapReq<T>(req: () => Promise<T>): Promise<T> {
     if (!this.authToken) {
       console.log("Authorizing B2...");
