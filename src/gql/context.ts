@@ -15,8 +15,8 @@ export interface DataSources {
   discordApi: DiscordApi;
 }
 
-export const createDataSources = (fetch?: any): DataSources => ({
-  discordApi: new DiscordApi(fetch)
+export const createDataSources = (): DataSources => ({
+  discordApi: new DiscordApi()
 });
 
 export async function createContext({

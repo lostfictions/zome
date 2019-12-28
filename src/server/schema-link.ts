@@ -1,6 +1,5 @@
 import { ApolloLink, Operation, FetchResult, Observable } from "apollo-link";
 import { execute } from "graphql/execution/execute";
-import fetch from "node-fetch";
 
 import { schema as gqlSchema } from "../gql/schema";
 import { createContext, createDataSources } from "../gql/context";
@@ -16,7 +15,7 @@ import { DataSource } from "apollo-datasource";
 
 export function makeSchemaLink(session?: string) {
   const context = createContext({ session }).then(ctx => {
-    const dataSources = createDataSources(fetch);
+    const dataSources = createDataSources();
     for (const ds of Object.values(dataSources) as DataSource[]) {
       // no-unused-expressions doesn't like conditional call yet?
       // eslint-disable-next-line no-unused-expressions
