@@ -47,7 +47,7 @@ export default class B2Api extends RESTDataSource<BaseContext> {
    * Even nicer would be async initialization, tracked in
    * https://github.com/apollographql/apollo-server/pull/3639
    */
-  protected async wrapReq<T>(req: () => Promise<T>): Promise<T> {
+  protected async validateAuth<T>(req: () => Promise<T>): Promise<T> {
     if (!this.authToken) {
       console.log("Authorizing B2...");
       await this.authorize();
@@ -126,11 +126,11 @@ export default class B2Api extends RESTDataSource<BaseContext> {
   }
 
   getUploadUrl() {
-    return this.wrapReq(() =>
-      this.get<GetUploadUrlResponse>("/b2_get_upload_url", {
+    return this.validateAuth(() => {
+      return this.get<GetUploadUrlResponse>("/b2_get_upload_url", {
         bucketId: this.bucketId
-      })
-    );
+      });
+    });
   }
 
   listFileNames(data?: {
@@ -139,9 +139,11 @@ export default class B2Api extends RESTDataSource<BaseContext> {
     prefix?: string;
     delimiter?: string;
   }) {
-    return this.get("/b2_list_file_names", {
-      ...data,
-      bucketId: this.bucketId
+    return this.validateAuth(() => {
+      return this.get("/b2_list_file_names", {
+        ...data,
+        bucketId: this.bucketId
+      });
     });
   }
 
@@ -152,22 +154,30 @@ export default class B2Api extends RESTDataSource<BaseContext> {
     prefix?: string;
     delimiter?: string;
   }) {
-    return this.get("/b2_list_file_versions", {
-      ...data,
-      bucketId: this.bucketId
+    return this.validateAuth(() => {
+      return this.get("/b2_list_file_versions", {
+        ...data,
+        bucketId: this.bucketId
+      });
     });
   }
 
   hideFile(data: { bucketId: string; fileName: string }) {
-    return this.get<GetFileInfoResponse>("/b2_hide_file", data);
+    return this.validateAuth(() => {
+      return this.get<GetFileInfoResponse>("/b2_hide_file", data);
+    });
   }
 
   getFileInfo(data: { fileId: string }) {
-    return this.get<GetFileInfoResponse>("/b2_get_file_info", data);
+    return this.validateAuth(() => {
+      return this.get<GetFileInfoResponse>("/b2_get_file_info", data);
+    });
   }
 
   deleteFileVersion(data: { fileId: string; fileName: string }) {
-    return this.get("/b2_delete_file_version", data);
+    return this.validateAuth(() => {
+      return this.get("/b2_delete_file_version", data);
+    });
   }
 
   /**
@@ -206,10 +216,12 @@ export default class B2Api extends RESTDataSource<BaseContext> {
      */
     b2ContentDisposition?: string;
   }) {
-    return this.get<GetDownloadAuthorizationResponse>(
-      "/b2_get_download_authorization",
-      data
-    );
+    return this.validateAuth(() => {
+      return this.get<GetDownloadAuthorizationResponse>(
+        "/b2_get_download_authorization",
+        data
+      );
+    });
   }
 
   startLargeFile({
@@ -221,22 +233,30 @@ export default class B2Api extends RESTDataSource<BaseContext> {
     fileName: string;
     contentType?: string;
   }) {
-    return this.get<GetFileInfoResponse>("/b2_start_large_file", {
-      bucketId,
-      fileName,
-      contentType
+    return this.validateAuth(() => {
+      return this.get<GetFileInfoResponse>("/b2_start_large_file", {
+        bucketId,
+        fileName,
+        contentType
+      });
     });
   }
 
   getUploadPartUrl(data: { fileId: string }) {
-    return this.get("/b2_get_upload_part_url", data);
+    return this.validateAuth(() => {
+      return this.get("/b2_get_upload_part_url", data);
+    });
   }
 
   finishLargeFile(data: { fileId: string; partSha1Array: string[] }) {
-    return this.get<GetFileInfoResponse>("/b2_finish_large_file", data);
+    return this.validateAuth(() => {
+      return this.get<GetFileInfoResponse>("/b2_finish_large_file", data);
+    });
   }
 
   cancelLargeFile(data: { fileId: string }) {
-    return this.get("/b2_cancel_large_file", data);
+    return this.validateAuth(() => {
+      return this.get("/b2_cancel_large_file", data);
+    });
   }
 }
