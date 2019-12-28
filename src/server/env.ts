@@ -12,6 +12,8 @@ const strSet = makeValidator<Set<string>>(x => {
 export const {
   DISCORD_CLIENT_SECRET,
   DISCORD_CLIENT_ID,
+  B2_ACCOUNT_ID,
+  B2_APPLICATION_KEY,
   APP_SECRET,
   WHITELISTED_GUILDS,
   HOST
@@ -20,6 +22,8 @@ export const {
   {
     DISCORD_CLIENT_SECRET: str(),
     DISCORD_CLIENT_ID: str(),
+    B2_ACCOUNT_ID: str(),
+    B2_APPLICATION_KEY: str(),
     APP_SECRET: str(),
     WHITELISTED_GUILDS: strSet(),
     HOST: str({ devDefault: "http://localhost:3000" })
