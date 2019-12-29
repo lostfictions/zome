@@ -1,2 +1,1 @@
-src/gql/generated
-src/apollo/generated
+src/**/generated/

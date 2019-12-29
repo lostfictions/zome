@@ -1,9 +1,9 @@
 {
   "overwrite": true,
-  "schema": "src/gql/generated/schema.graphql",
+  "schema": "src/server/gql/generated/schema.graphql",
   "documents": "src/{components,pages}/**/*.tsx",
   "generates": {
-    "src/apollo/generated/client.tsx": {
+    "src/client/generated/apollo-client.tsx": {
       "plugins": [
         "typescript",
         "typescript-operations",

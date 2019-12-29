@@ -10,7 +10,7 @@
     "sb": "start-storybook -p 6006 --ci",
     "generate": "run-s -l generate:*",
     "generate:prisma": "prisma2 generate",
-    "generate:nexus": "GEN_NEXUS=y babel-node --extensions='.ts' src/gql/schema",
+    "generate:nexus": "GEN_NEXUS=y babel-node --extensions='.ts' src/server/gql/schema",
     "generate:client": "graphql-codegen --config codegen.json",
     "prisma:seed": "babel-node --extensions='.ts' prisma/seed",
     "prisma:dev": "prisma2 dev",
@@ -21,7 +21,7 @@
     "test:stylelint": "stylelint 'src/**/*.{css,tsx}'",
     "test:jest": "jest --colors --env=jsdom",
     "prettier": "prettier --write '{src,test}/**/*.{css,js,ts,tsx}'",
-    "postinstall": "echo remember to reenable run-s generate"
+    "postinstall": "echo remember to run generate if needed"
   },
   "dependencies": {
     "@apollo/client": "^3.0.0-beta.16",

@@ -1,7 +1,7 @@
 import { ApolloServer } from "apollo-server-micro";
 
-import { schema } from "~/gql/schema";
-import { createContext, createDataSources } from "~/gql/context";
+import { schema } from "./schema";
+import { createContext, createDataSources } from "./context";
 
 import { NextApiRequest } from "next";
 

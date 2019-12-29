@@ -3,8 +3,8 @@ import Link from "next/link";
 import styled, { css } from "astroturf";
 import gql from "graphql-tag";
 
-import { withApollo } from "~/apollo/with-apollo";
-import { useMeQuery } from "~/apollo/generated/client";
+import { withApollo } from "~/client/with-apollo";
+import { useMeQuery } from "~/client/generated/apollo-client";
 import Dropzone from "~/components/Dropzone";
 
 gql`

@@ -5,7 +5,7 @@ import { createHash } from "crypto";
 // progress events (and download progress events are complicated!)
 import axios from "axios";
 
-import { GetFileInfoResponse } from "~/gql/datasources/b2-api";
+import { GetFileInfoResponse } from "~/server/gql/datasources/b2-api";
 
 type ResponseType =
   | "arraybuffer"
@@ -134,3 +134,16 @@ export function sha1(data: string | Buffer) {
   hash.update(data);
   return hash.digest("hex");
 }
+
+// browser ver:
+// async function sha1(message) {
+//   // encode as (utf-8) Uint8Array
+//   const msgUint8 = new TextEncoder().encode(message);
+//   // hash the message
+//   const hashBuffer = await crypto.subtle.digest("SHA-1", msgUint8);
+//   // convert buffer to byte array
+//   const hashArray = Array.from(new Uint8Array(hashBuffer));
+//   // convert bytes to hex string
+//   const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+//   return hashHex;
+// }

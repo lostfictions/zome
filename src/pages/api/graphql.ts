@@ -1,6 +1,6 @@
 import "~/server/sourcemaps";
 
-import apolloServer from "~/gql/server";
+import apolloServer from "~/server/gql/apollo-server";
 
 export const config = {
   api: {

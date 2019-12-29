@@ -1,8 +1,8 @@
 import { ApolloLink, Operation, FetchResult, Observable } from "apollo-link";
 import { execute } from "graphql/execution/execute";
 
-import { schema as gqlSchema } from "../gql/schema";
-import { createContext, createDataSources } from "../gql/context";
+import { schema as gqlSchema } from "./gql/schema";
+import { createContext, createDataSources } from "./gql/context";
 
 import { GraphQLSchema } from "graphql/type/schema";
 import { DataSource } from "apollo-datasource";
@@ -24,10 +24,12 @@ export function makeSchemaLink(session?: string) {
     return { ...ctx, dataSources };
   });
 
-  return (new SchemaLink({
+  const schemaLink = new SchemaLink({
     schema: gqlSchema,
     context
-  }) as unknown) as import("@apollo/client").ApolloLink; /* incompatible typings */
+  });
+
+  return (schemaLink as unknown) as import("@apollo/client").ApolloLink; /* incompatible typings */
 }
 
 type ResolverContextFunction = (operation: Operation) => Record<string, any>;
