@@ -73,6 +73,8 @@ export function withApollo<P, IP>(
     WithApollo.displayName = `withApollo(${displayName})`;
   }
 
+  // (see https://github.com/typescript-eslint/typescript-eslint/issues/1425)
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (
       ctx: NextPageContext & { apolloClient: ApolloClient<unknown> }

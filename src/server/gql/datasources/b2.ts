@@ -28,10 +28,6 @@ export default class B2Api extends RESTDataSource<BaseContext> {
    */
   reauthAttempted = false;
 
-  constructor() {
-    super();
-  }
-
   async willSendRequest(request: RequestOptions) {
     if (!this.authToken) {
       throw new Error("Expected auth token to be available!");
@@ -52,6 +48,7 @@ export default class B2Api extends RESTDataSource<BaseContext> {
       console.log("Authorizing B2...");
       await this.authorize();
     }
+
     try {
       return await req();
     } catch (e) {
@@ -69,7 +66,7 @@ export default class B2Api extends RESTDataSource<BaseContext> {
           )})`
         );
         await this.authorize();
-        return await req();
+        return req();
       }
       console.error(
         "Request error exts:",

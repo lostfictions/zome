@@ -58,7 +58,7 @@ const UserIcon: React.FC = () => {
   } else if (error) {
     console.warn(error);
     icon = <div>{JSON.stringify(error)}</div>;
-  } else if (data && data.me) {
+  } else if (data?.me) {
     icon = (
       <div className={icongroup}>
         <img className={avatar} src={getAvatar(data.me.id, data.me.avatar)} />
