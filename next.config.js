@@ -31,6 +31,7 @@ module.exports = withPlugins(
   ],
   {
     experimental: { css: true },
-    poweredByHeader: false
+    poweredByHeader: false,
+    reactStrictMode: true
   }
 );
