@@ -44,31 +44,16 @@
   dependencies:
     cross-fetch "3.0.4"
 
-"@apollo/client@^3.0.0-beta.24":
-  version "3.0.0-beta.24"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.0.0-beta.24.tgz#6d52caa0309f5376e7bc493a63d3e9c0da5604dc"
-  integrity sha512-jbw+C2WM/qov5m2vLhorB9GeJaEwYfIKQvr1yRRO9TCo3JwrMAt6Dfp2fa57upHyJ5zyNVF2Wt8h0Jlka2refw==
+"@apollo/client@^3.0.0-beta.24", "@apollo/client@^3.0.0-beta.43":
+  version "3.0.0-beta.43"
+  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.0.0-beta.43.tgz#e6707ffc285b906dfb99fd9ac553bb1c9acb6829"
+  integrity sha512-ufE0QubCI6kP/BudcnV3AGZVgsN/ZJNWy70k6ZwcR8fnYWqPfjxW1aATTq8Ud54latHpO83UtKHVOHUQiClQOA==
   dependencies:
     "@types/zen-observable" "^0.8.0"
     "@wry/equality" "^0.1.9"
     fast-json-stable-stringify "^2.0.0"
-    graphql-tag "^2.10.1"
-    optimism "^0.11.3"
-    symbol-observable "^1.2.0"
-    ts-invariant "^0.4.4"
-    tslib "^1.10.0"
-    zen-observable "^0.8.14"
-
-"@apollo/client@^3.0.0-beta.4":
-  version "3.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.0.0-beta.16.tgz#5452a8748ed6cb3fa0ce5450589cfc2005cbeedc"
-  integrity sha512-g5cIMnTwvUCpO4SlBXKXH3vsKI7ie355KC4rZ2Gthon4lZ9GbSf1W8i77ihARElNdybrSuzEVBpenNi+XumVcg==
-  dependencies:
-    "@types/zen-observable" "^0.8.0"
-    "@wry/equality" "^0.1.9"
-    fast-json-stable-stringify "^2.0.0"
-    graphql-tag "^2.10.1"
-    optimism "^0.11.3"
+    graphql-tag "^2.10.2"
+    optimism "^0.11.5"
     symbol-observable "^1.2.0"
     ts-invariant "^0.4.4"
     tslib "^1.10.0"
@@ -103,19 +88,19 @@
     "@types/node" "^10.1.0"
     long "^4.0.0"
 
-"@apollo/react-common@^3.2.0-beta.0":
-  version "3.2.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@apollo/react-common/-/react-common-3.2.0-beta.0.tgz#19cced724acfbfbc78a35bd2a841d4ed1c08f06e"
-  integrity sha512-C1BivgqdFn8axG6L2gW3SaV3uPjhLr0RbSGthhQlKmIqFoWpLUTX8Xlvrzah6A+hpuUg6aby6Nm3zt0hpyD0yg==
+"@apollo/react-common@^4.0.0-beta.1":
+  version "4.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@apollo/react-common/-/react-common-4.0.0-beta.1.tgz#f28cb717829c93320fa5faa96b31dc9ca1eb492c"
+  integrity sha512-q/6p+w3f9P8/MWIS2ZxG66+EgF25f+AgYHSn/uUjtGk8TF1Gf/2wTdjXcYhxMH9h3iAKqz7s8s5kJiGJpB7ZJA==
   dependencies:
-    "@apollo/client" "^3.0.0-beta.4"
+    "@apollo/client" "^3.0.0-beta.24"
 
-"@apollo/react-ssr@^3.2.0-beta.0":
-  version "3.2.0-beta.0"
-  resolved "https://registry.yarnpkg.com/@apollo/react-ssr/-/react-ssr-3.2.0-beta.0.tgz#d359c55c5a76c9164ea4f6b24ee6083f797a9fed"
-  integrity sha512-ggBkaKVHmIJZTWpTtjwOGGKlLxVWaHo7+NxVFZ7Y/w/kIM4d1zyj84tbLReunpwtoisjsESS+qyMOrcFDkU+yg==
+"@apollo/react-ssr@^4.0.0-beta.1":
+  version "4.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@apollo/react-ssr/-/react-ssr-4.0.0-beta.1.tgz#99426b570730770bfc20547ae2aaab2cff7dbee4"
+  integrity sha512-ZPc7+OMxxB6GqsT+84KLOvcBpSqQcgAaFxPeBcHEX0pP9GxfIEDASuJjmzEavkN/8dOzdIX4/UrJ8au1w/7sww==
   dependencies:
-    "@apollo/react-common" "^3.2.0-beta.0"
+    "@apollo/react-common" "^4.0.0-beta.1"
     tslib "^1.10.0"
 
 "@apollographql/apollo-tools@^0.4.3":
@@ -7545,7 +7530,7 @@ graphql-request@^1.5.0:
   dependencies:
     cross-fetch "2.2.2"
 
-graphql-tag@2.10.3, graphql-tag@^2.10.3:
+graphql-tag@2.10.3, graphql-tag@^2.10.2, graphql-tag@^2.10.3:
   version "2.10.3"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.10.3.tgz#ea1baba5eb8fc6339e4c4cf049dabe522b0edf03"
   integrity sha512-4FOv3ZKfA4WdOKJeHdz6B3F/vxBLSgmBcGeAFPf4n1F64ltJUvOOerNj0rsJxONQGdhUMynQIvd6LzB+1J5oKA==
@@ -10625,10 +10610,10 @@ open@^7.0.0:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
-optimism@^0.11.3:
-  version "0.11.4"
-  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.11.4.tgz#cc8a9378b5e4f2ce2a2b5e4b109327755e65dc76"
-  integrity sha512-a9dQJt/dvrxhkEGK/l1U+T4zJ9OyIOWGnRrbjxy8+mWHVR3C3phmKlRuh2YKkSVjTf8G1kVFVEqL9+s4E77wsg==
+optimism@^0.11.5:
+  version "0.11.5"
+  resolved "https://registry.yarnpkg.com/optimism/-/optimism-0.11.5.tgz#4c5d45fa0fa1cc9dcf092729b5d6d661b53ff5c9"
+  integrity sha512-twCHmBb64DYzEZ8A3O+TLCuF/RmZPBhXPQYv4agoiALRLlW9SidMzd7lwUP9mL0jOZhzhnBmb8ajqA00ECo/7g==
   dependencies:
     "@wry/context" "^0.5.0"
 
