@@ -30,7 +30,6 @@ module.exports = withPlugins(
     // optimizedImages
   ],
   {
-    experimental: { css: true },
     poweredByHeader: false,
     reactStrictMode: true
   }

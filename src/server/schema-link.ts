@@ -17,9 +17,12 @@ export function makeSchemaLink(session?: string) {
   const context = createContext({ session }).then(ctx => {
     const dataSources = createDataSources();
     for (const ds of Object.values(dataSources) as DataSource[]) {
-      // no-unused-expressions doesn't like conditional call yet?
-      // eslint-disable-next-line no-unused-expressions
-      ds.initialize?.({ context: ctx, cache: undefined as any });
+      const p = ds.initialize?.({ context: ctx, cache: undefined as any });
+      if (p) {
+        p.catch(e => {
+          console.error(e);
+        });
+      }
     }
     return { ...ctx, dataSources };
   });

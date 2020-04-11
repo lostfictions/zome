@@ -2,7 +2,7 @@ import "~/server/sourcemaps";
 
 import querystring from "querystring";
 
-import uuid from "uuid";
+import { v4 as uuid } from "uuid";
 import fetch from "node-fetch";
 import { sign } from "jsonwebtoken";
 import cookie from "cookie";
@@ -70,7 +70,7 @@ function redirectAuthorize(res: NextApiResponse, returnTo?: string): void {
     }
   }
 
-  const state = uuid.v4();
+  const state = uuid();
   states.set(state, finalReturn);
   setTimeout(() => {
     states.delete(state);

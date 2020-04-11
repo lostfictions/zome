@@ -56,7 +56,7 @@
     "no-throw-literal": "warn",
     "no-undef": "off",
     "no-unmodified-loop-condition": "warn",
-    "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
+    "no-unused-expressions": "off", // using ts-eslint variant
     "no-unused-vars": "off",
     "no-useless-call": "warn",
     "no-useless-computed-key": "warn",
@@ -81,6 +81,7 @@
     "@typescript-eslint/no-throw-literal": "warn",
     "@typescript-eslint/no-unnecessary-type-arguments": "warn",
     "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+    "@typescript-eslint/no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
