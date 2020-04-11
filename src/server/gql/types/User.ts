@@ -7,5 +7,5 @@ export const User = objectType({
     t.string("username");
     t.string("discriminator");
     t.string("avatar", { nullable: true });
-  }
+  },
 });

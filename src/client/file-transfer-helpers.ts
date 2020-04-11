@@ -34,7 +34,7 @@ export function uploadFile({
   data,
   mime,
   hash,
-  onUploadProgress
+  onUploadProgress,
 }: UploadFileProps) {
   const encodedFilename = getUrlEncodedFilename(filename);
 
@@ -45,12 +45,12 @@ export function uploadFile({
         "Content-Type": mime || "b2/x-auto",
         "Content-Length": data.byteLength || data.length,
         "X-Bz-File-Name": encodedFilename,
-        "X-Bz-Content-Sha1": hash || sha1(data)
+        "X-Bz-Content-Sha1": hash || sha1(data),
       },
       maxRedirects: 0,
-      onUploadProgress
+      onUploadProgress,
     })
-    .then(res => res.data);
+    .then((res) => res.data);
 }
 
 interface DownloadFileProps {
@@ -64,32 +64,32 @@ export function downloadFileByName({
   bucketName,
   fileName,
   responseType,
-  onDownloadProgress
+  onDownloadProgress,
 }: { bucketName: string; fileName: string } & DownloadFileProps) {
   const encodedFileName = getUrlEncodedFilename(fileName);
 
   return axios
     .get(`${downloadUrl}/file/${bucketName}/${encodedFileName}`, {
       responseType,
-      onDownloadProgress
+      onDownloadProgress,
     })
-    .then(res => res.data);
+    .then((res) => res.data);
 }
 
 export function downloadFileById({
   downloadUrl,
   fileId,
   responseType,
-  onDownloadProgress
+  onDownloadProgress,
 }: {
   fileId: string;
 } & DownloadFileProps) {
   return axios
     .get(`${downloadUrl}/b2api/v2/b2_download_file_by_id?fileId=${fileId}`, {
       responseType,
-      onDownloadProgress
+      onDownloadProgress,
     })
-    .then(res => res.data);
+    .then((res) => res.data);
 }
 
 interface UploadPartProps {
@@ -106,7 +106,7 @@ export function uploadPart({
   uploadAuthToken,
   partNumber,
   data,
-  onUploadProgress
+  onUploadProgress,
 }: UploadPartProps) {
   return axios
     .post(uploadUrl, data, {
@@ -114,19 +114,16 @@ export function uploadPart({
         Authorization: uploadAuthToken,
         "Content-Length": data.byteLength || data.length,
         "X-Bz-Part-Number": partNumber,
-        "X-Bz-Content-Sha1": sha1(data)
+        "X-Bz-Content-Sha1": sha1(data),
       },
       onUploadProgress,
-      maxRedirects: 0
+      maxRedirects: 0,
     })
-    .then(res => res.data);
+    .then((res) => res.data);
 }
 
 export function getUrlEncodedFilename(filename: string) {
-  return filename
-    .split("/")
-    .map(encodeURIComponent)
-    .join("/");
+  return filename.split("/").map(encodeURIComponent).join("/");
 }
 
 export function sha1(data: string | Buffer) {

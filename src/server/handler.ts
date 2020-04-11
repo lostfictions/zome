@@ -17,8 +17,8 @@ const handler = (fn: NextApiHandler) => (
 export default handler;
 
 const run = (req: NextApiRequest, res: NextApiResponse, fn: NextApiHandler) =>
-  new Promise(resolve => resolve(fn(req, res)))
-    .then(val => {
+  new Promise((resolve) => resolve(fn(req, res)))
+    .then((val) => {
       if (val === null) {
         send(res, 204, null);
         return;
@@ -30,7 +30,7 @@ const run = (req: NextApiRequest, res: NextApiResponse, fn: NextApiHandler) =>
         send(res, res.statusCode || 200, val);
       }
     })
-    .catch(err => sendError(req, res, err));
+    .catch((err) => sendError(req, res, err));
 
 const send = (res: NextApiResponse, code: number, obj: any = null) => {
   res.statusCode = code;

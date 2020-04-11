@@ -9,7 +9,7 @@ const apolloServer = new ApolloServer({
   schema,
   dataSources: createDataSources as () => { [source: string]: any },
   context: ({ req }: { req: NextApiRequest }) =>
-    createContext({ session: req.cookies.session })
+    createContext({ session: req.cookies.session }),
 });
 
 export default apolloServer;

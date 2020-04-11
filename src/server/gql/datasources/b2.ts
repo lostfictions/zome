@@ -7,7 +7,7 @@ import {
   AuthorizationResponse,
   GetUploadUrlResponse,
   GetDownloadAuthorizationResponse,
-  GetFileInfoResponse
+  GetFileInfoResponse,
 } from "./b2-api";
 
 import { B2_ACCOUNT_ID, B2_APPLICATION_KEY } from "~/server/env";
@@ -85,8 +85,8 @@ export default class B2Api extends RESTDataSource<BaseContext> {
         headers: {
           Authorization: `Basic ${Buffer.from(
             `${B2_ACCOUNT_ID}:${B2_APPLICATION_KEY}`
-          ).toString("base64")}`
-        }
+          ).toString("base64")}`,
+        },
       }
     );
 
@@ -125,7 +125,7 @@ export default class B2Api extends RESTDataSource<BaseContext> {
   getUploadUrl() {
     return this.validateAuth(() => {
       return this.get<GetUploadUrlResponse>("/b2_get_upload_url", {
-        bucketId: this.bucketId
+        bucketId: this.bucketId,
       });
     });
   }
@@ -139,7 +139,7 @@ export default class B2Api extends RESTDataSource<BaseContext> {
     return this.validateAuth(() => {
       return this.get("/b2_list_file_names", {
         ...data,
-        bucketId: this.bucketId
+        bucketId: this.bucketId,
       });
     });
   }
@@ -154,7 +154,7 @@ export default class B2Api extends RESTDataSource<BaseContext> {
     return this.validateAuth(() => {
       return this.get("/b2_list_file_versions", {
         ...data,
-        bucketId: this.bucketId
+        bucketId: this.bucketId,
       });
     });
   }
@@ -224,7 +224,7 @@ export default class B2Api extends RESTDataSource<BaseContext> {
   startLargeFile({
     bucketId,
     fileName,
-    contentType = "b2/x-auto"
+    contentType = "b2/x-auto",
   }: {
     bucketId: string;
     fileName: string;
@@ -234,7 +234,7 @@ export default class B2Api extends RESTDataSource<BaseContext> {
       return this.get<GetFileInfoResponse>("/b2_start_large_file", {
         bucketId,
         fileName,
-        contentType
+        contentType,
       });
     });
   }

@@ -5,7 +5,7 @@ import {
   ApolloClient,
   ApolloProvider,
   InMemoryCache,
-  HttpLink
+  HttpLink,
 } from "@apollo/client";
 
 /** In the browser, there's no need to recreate the client on every request, */
@@ -122,7 +122,7 @@ export function withApollo<P, IP>(
                 pageProps={{
                   pageProps,
                   phase: "prepass",
-                  apolloClient
+                  apolloClient,
                 }}
               />
             );
@@ -148,13 +148,13 @@ export function withApollo<P, IP>(
         ? {
             phase,
             pageProps,
-            apolloState
+            apolloState,
           }
         : {
             phase,
             session,
             pageProps,
-            apolloState
+            apolloState,
           };
     };
   }
@@ -171,13 +171,13 @@ function getApolloClient(session?: string, initialState?: unknown) {
   // isn't shared between connections (which would be bad)
   if (typeof window === "undefined") {
     const {
-      makeSchemaLink
+      makeSchemaLink,
     } = require("../server/schema-link") as typeof import("../server/schema-link");
 
     return new ApolloClient({
       ssrMode: true,
       link: makeSchemaLink(session),
-      cache: new InMemoryCache().restore(initialState as any)
+      cache: new InMemoryCache().restore(initialState as any),
       // ssrForceFetchDelay: 100
     });
   }
@@ -187,9 +187,9 @@ function getApolloClient(session?: string, initialState?: unknown) {
     cachedApolloClient = new ApolloClient({
       link: new HttpLink({
         uri: "/api/graphql",
-        credentials: "same-origin"
+        credentials: "same-origin",
       }),
-      cache: new InMemoryCache().restore(initialState as any)
+      cache: new InMemoryCache().restore(initialState as any),
       // ssrForceFetchDelay: 100
     });
   }

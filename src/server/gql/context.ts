@@ -19,11 +19,11 @@ export interface DataSources {
 
 export const createDataSources = (): DataSources => ({
   discordApi: new DiscordApi(),
-  b2Api: new B2Api()
+  b2Api: new B2Api(),
 });
 
 export async function createContext({
-  session
+  session,
 }: {
   session?: string;
 }): Promise<BaseContext> {
@@ -35,6 +35,6 @@ export async function createContext({
 
   return {
     photon,
-    user
+    user,
   };
 }

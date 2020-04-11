@@ -9,7 +9,7 @@ export const Query = queryType({
         const { user, dataSources } = ctx;
         if (!user) return null;
         return dataSources.discordApi.getMe();
-      }
+      },
     });
-  }
+  },
 });

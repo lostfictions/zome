@@ -14,12 +14,12 @@ import { DataSource } from "apollo-datasource";
 // further context.
 
 export function makeSchemaLink(session?: string) {
-  const context = createContext({ session }).then(ctx => {
+  const context = createContext({ session }).then((ctx) => {
     const dataSources = createDataSources();
     for (const ds of Object.values(dataSources) as DataSource[]) {
       const p = ds.initialize?.({ context: ctx, cache: undefined as any });
       if (p) {
-        p.catch(e => {
+        p.catch((e) => {
           console.error(e);
         });
       }
@@ -29,7 +29,7 @@ export function makeSchemaLink(session?: string) {
 
   const schemaLink = new SchemaLink({
     schema: gqlSchema,
-    context
+    context,
   });
 
   return (schemaLink as unknown) as import("@apollo/client").ApolloLink; /* incompatible typings */
@@ -83,15 +83,15 @@ export class SchemaLink extends ApolloLink {
   }
 
   public request(operation: Operation): Observable<FetchResult> | null {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       Promise.resolve(this._execute(operation))
-        .then(data => {
+        .then((data) => {
           if (!observer.closed) {
             observer.next(data);
             observer.complete();
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (!observer.closed) {
             observer.error(error);
           }

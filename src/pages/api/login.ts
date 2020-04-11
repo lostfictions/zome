@@ -13,7 +13,7 @@ import {
   DISCORD_CLIENT_SECRET as client_secret,
   DISCORD_CLIENT_ID as client_id,
   APP_SECRET,
-  HOST
+  HOST,
 } from "~/server/env";
 
 import { NextApiResponse } from "next";
@@ -85,7 +85,7 @@ function redirectAuthorize(res: NextApiResponse, returnTo?: string): void {
       client_id,
       redirect_uri,
       scope,
-      state
+      state,
     })}`
   );
   res.end();
@@ -119,7 +119,7 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
   const response: TokenResponse = await fetch(TOKEN_URL, {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     body: querystring.encode({
       grant_type: "authorization_code",
@@ -127,9 +127,9 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
       client_secret,
       scope,
       code,
-      redirect_uri
-    })
-  }).then(r => r.json());
+      redirect_uri,
+    }),
+  }).then((r) => r.json());
 
   const accessToken = response.access_token;
 
@@ -139,9 +139,9 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
 
   const account = await fetch(USER_URL, {
     headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  }).then(r => r.json());
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }).then((r) => r.json());
 
   if (!account && account.id) {
     throw new Error("Couldn't retrieve account info!");
@@ -150,20 +150,20 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
   const data = {
     token: accessToken,
     expires: Date.now() + response.expires_in * 1000,
-    refreshToken: response.refresh_token
+    refreshToken: response.refresh_token,
   };
 
   await photon.discordUsers.upsert({
     where: {
-      id: account.id
+      id: account.id,
     },
     update: {
-      ...data
+      ...data,
     },
     create: {
       id: account.id,
-      ...data
-    }
+      ...data,
+    },
   });
 
   const sessionCookie = sign(account.id, APP_SECRET);
@@ -174,7 +174,7 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
       path: "/",
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 365,
-      sameSite: "lax"
+      sameSite: "lax",
     })
   );
   res.statusCode = 302;

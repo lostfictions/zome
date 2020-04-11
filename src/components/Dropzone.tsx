@@ -26,7 +26,7 @@ const Dropzone: React.FC = () => {
   const onDrop = useCallback(
     async (acceptedFiles: FileWithPath[]) => {
       const filesWithTags = await Promise.all(
-        acceptedFiles.map<Promise<FileMaybeTag>>(file => {
+        acceptedFiles.map<Promise<FileMaybeTag>>((file) => {
           if (!file.type.startsWith("audio/")) {
             return Promise.resolve({ file });
           }
@@ -38,7 +38,7 @@ const Dropzone: React.FC = () => {
               },
               onError(error) {
                 rej(error);
-              }
+              },
             })
           );
         })
@@ -60,7 +60,7 @@ const Dropzone: React.FC = () => {
     [setFiles]
   );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop: onDrop as any // doesn't like files with path prop?
+    onDrop: onDrop as any, // doesn't like files with path prop?
   });
 
   return (
