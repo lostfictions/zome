@@ -72,7 +72,6 @@
     "@graphql-codegen/typescript-operations": "^1.13.2",
     "@graphql-codegen/typescript-react-apollo": "^1.13.2",
     "@prisma/cli": "^2.0.0-beta.2",
-    "@prisma/sdk": "2.0.0-beta.2",
     "@storybook/addon-info": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/react": "^5.3.18",
