@@ -153,7 +153,7 @@ async function completeAuth(res: NextApiResponse, state: string, code: string) {
     refreshToken: response.refresh_token,
   };
 
-  await photon.discordUsers.upsert({
+  await photon.discordUser.upsert({
     where: {
       id: account.id,
     },

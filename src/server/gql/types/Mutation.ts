@@ -2,7 +2,7 @@
 // import { sign } from 'jsonwebtoken'
 // import { idArg, mutationType, stringArg } from "nexus";
 // import { APP_SECRET, getUserId } from '../utils'
-import {} from "nexus";
+import {} from "@nexus/schema";
 
 // export const Mutation = mutationType({
 //   definition(t) {
