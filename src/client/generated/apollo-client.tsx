@@ -12,12 +12,12 @@ export type Scalars = {
 };
 
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   me?: Maybe<User>;
 };
 
 export type User = {
-   __typename?: 'User';
+  __typename?: 'User';
   avatar?: Maybe<Scalars['String']>;
   discriminator: Scalars['String'];
   id: Scalars['String'];
