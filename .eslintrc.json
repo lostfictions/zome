@@ -5,7 +5,6 @@
     "node": true,
     "browser": true
   },
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {
@@ -13,19 +12,21 @@
     },
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "react", "react-hooks"],
+  "parser": "@typescript-eslint/parser",
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
     "prettier",
     "prettier/@typescript-eslint"
   ],
+  "plugins": ["node", "@typescript-eslint", "react", "react-hooks"],
   "settings": { "react": { "version": "detect" } },
   "reportUnusedDisableDirectives": true,
   "rules": {
     "array-callback-return": "warn",
     "curly": ["warn", "multi-line", "consistent"],
     "default-case": "warn",
+    "default-case-last": "warn",
     "eqeqeq": ["error", "always", { "null": "ignore" }],
     "no-await-in-loop": "warn",
     "no-buffer-constructor": "error",
@@ -56,8 +57,9 @@
     "no-throw-literal": "warn",
     "no-undef": "off",
     "no-unmodified-loop-condition": "warn",
-    "no-unused-expressions": "off", // using ts-eslint variant
+    "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "no-unused-vars": "off",
+    "no-useless-backreference": "warn",
     "no-useless-call": "warn",
     "no-useless-computed-key": "warn",
     "no-useless-concat": "warn",
@@ -65,14 +67,21 @@
     "no-useless-return": "warn",
     "no-var": "warn",
     "no-void": "warn",
+    "one-var": ["warn", "never"],
     "prefer-const": "warn",
     "prefer-promise-reject-errors": "warn",
     "prefer-regex-literals": "warn",
     "symbol-description": "warn",
     "valid-typeof": ["error", { "requireStringLiterals": true }],
+    "node/no-deprecated-api": "warn",
+    "react/prop-types": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/no-unescaped-entities": "warn",
     "@typescript-eslint/adjacent-overload-signatures": "warn",
     "@typescript-eslint/ban-types": "warn",
     "@typescript-eslint/consistent-type-assertions": "warn",
+    "@typescript-eslint/method-signature-style": "warn",
     "@typescript-eslint/no-array-constructor": "warn",
     "@typescript-eslint/no-extra-non-null-assertion": "warn",
     "@typescript-eslint/no-floating-promises": "warn",
@@ -81,7 +90,6 @@
     "@typescript-eslint/no-throw-literal": "warn",
     "@typescript-eslint/no-unnecessary-type-arguments": "warn",
     "@typescript-eslint/no-unnecessary-type-assertion": "warn",
-    "@typescript-eslint/no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
@@ -96,22 +104,8 @@
     "@typescript-eslint/prefer-function-type": "warn",
     "@typescript-eslint/prefer-includes": "warn",
     "@typescript-eslint/prefer-optional-chain": "warn",
-    "@typescript-eslint/restrict-plus-operands": [
-      "warn",
-      {
-        "checkCompoundAssignments": true
-      }
-    ],
-    "@typescript-eslint/unbound-method": [
-      "warn",
-      {
-        "ignoreStatic": true
-      }
-    ],
-    "@typescript-eslint/unified-signatures": "warn",
-    "react/prop-types": "off",
-    "react/no-unescaped-entities": "warn",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "@typescript-eslint/restrict-plus-operands": ["warn", { "checkCompoundAssignments": true }],
+    "@typescript-eslint/unbound-method": ["warn", { "ignoreStatic": true }],
+    "@typescript-eslint/unified-signatures": "warn"
   }
 }
